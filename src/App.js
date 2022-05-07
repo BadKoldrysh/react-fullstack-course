@@ -1,7 +1,12 @@
-const App = () => {
+import Note from './components/Note';
+
+const App = ({ notes }) => {
   return (
     <div>
-    <h1>Hello React</h1>
+      <h2>Notes App</h2>
+        <ul>
+          {notes.map(note => <Note key={note.id} note={note} />)}
+        </ul>
     </div>
   );
 };
