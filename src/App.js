@@ -1,19 +1,22 @@
 import { useState } from 'react';
-import Person from './components/Person';
+import InputName from './components/inputs/Name';
+import InputNumber from './components/inputs/Number';
+import TypeSelect from './components/inputs/TypeSelect';
+import Filter from './components/Filter';
+import Numbers from './components/Numbers';
+import NewEntryForm from './components/NewEntryForm';
 
 const App = (props) => {
   const [persons, setPersons] = useState(props.persons);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-  const [searchInput, setSearchInput] = useState('');
+  const [newType, setNewType] = useState('');
+  const [filterInput, setFilterInput] = useState('');
   const [foundPersons, setFoundPersons] = useState(persons);
+  const personTypes = props.personTypes;
 
   const addPerson = (event) => {
     event.preventDefault();
-    const personObject = {
-      name: newName,
-      number: newNumber
-    };
 
     const existingPersons = persons.filter(person => person.name === newName);
     if (existingPersons.length !== 0) {
@@ -21,23 +24,27 @@ const App = (props) => {
       return;
     }
 
-    const newPersonsList = persons.concat(personObject);
+    const newPersonsList = persons.concat({ name: newName, number: newNumber, type: newType });
     setPersons(newPersonsList);
+    setFoundPersons(newPersonsList);
     setNewName('');
     setNewNumber('');
-    setFoundPersons(newPersonsList);
-    setSearchInput('');
+    setFilterInput('');
   };
 
-  const handleOnChange = (event) => {
+  const handleOnChangeName = (event) => {
     setNewName(event.target.value);
   };
 
-  const handleNumberOnChange = (event) => {
+  const handleOnChangeNumber = (event) => {
     setNewNumber(event.target.value);
   };
 
-  const handleSearchOnChange = (event) => {
+  const handleOnChangeType = (event) => {
+    setNewType(event.target.value);
+  };
+
+  const handleOnChangeFilter = (event) => {
     const found = persons.filter((person) => {
       const regexp = new RegExp(event.target.value, 'i');
 
@@ -45,29 +52,22 @@ const App = (props) => {
     });
 
     setFoundPersons(found);
-    setSearchInput(event.target.value);
+    setFilterInput(event.target.value);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with <input value={searchInput} onChange={handleSearchOnChange} /></div>
+      <Filter value={filterInput} onChange={handleOnChangeFilter} />
       <h2>add a new person</h2>
-      <form onSubmit={addPerson}>
-        <div>name: <input value={newName} onChange={handleOnChange} /></div>
-        <div>number: <input value={newNumber} onChange={handleNumberOnChange} /></div>
-        <div>
-          <button style={{cursor:'pointer'}} type="submit">add</button>
-        </div>
-      </form>
+      <NewEntryForm
+        onSubmit={addPerson}
+        nameInput={<InputName value={newName} onChange={handleOnChangeName} />}
+        numberInput={<InputNumber value={newNumber} onChange={handleOnChangeNumber} />}
+        typeSelect={<TypeSelect value={newType} onChange={handleOnChangeType} personTypes={personTypes} />}
+      />
       <h2>Numbers</h2>
-      <ul>
-      {
-        foundPersons.map(
-          person => <Person key={person.name} person={person} />
-        )
-      }
-      </ul>
+      <Numbers persons={foundPersons} />
     </div>
   );
 };
