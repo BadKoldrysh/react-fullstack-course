@@ -11,7 +11,11 @@ const App = (props) => {
       name: newName
     };
 
-
+    const existingPersons = persons.filter(person => person.name === newName);
+    if (existingPersons.length !== 0) {
+      alert(newName + 'is already added to phonebook');
+      return;
+    }
 
     setPersons(persons.concat(personObject));
     setNewName('');
@@ -30,7 +34,7 @@ const App = (props) => {
         </div>
         <div>debug: {newName}</div>
         <div>
-          <button type="submit">add</button>
+          <button style={{cursor:'pointer'}} type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
