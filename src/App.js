@@ -56,7 +56,6 @@ const App = (props) => {
       <form onSubmit={addPerson}>
         <div>name: <input value={newName} onChange={handleOnChange} /></div>
         <div>number: <input value={newNumber} onChange={handleNumberOnChange} /></div>
-        <div>debug: {newName} {newNumber}</div>
         <div>
           <button style={{cursor:'pointer'}} type="submit">add</button>
         </div>
