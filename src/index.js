@@ -4,13 +4,8 @@ import App from './App';
 
 const persons = [
   {
-    name: 'Arthur the King'
-  },
-  {
-    name: 'Lancelot'
-  },
-  {
-    name: 'Uter'
+    name: 'Arthur the King',
+    number: '+420775090133'
   },
 ];
 
