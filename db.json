@@ -3,21 +3,25 @@
     {
       "name": "Arto Hellas",
       "number": "040-123456",
+      "type": "unknown",
       "id": 1
     },
     {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
+      "type": "programmer",
       "id": 2
     },
     {
       "name": "Dan Abramov",
       "number": "12-43-234345",
+      "type": "programmer",
       "id": 3
     },
     {
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
+      "type": "unknown",
       "id": 4
     }
   ]

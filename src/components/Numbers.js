@@ -2,7 +2,7 @@ import Person from './Person';
 
 const Numbers = ({ persons }) => <ul>{
   persons.map(
-    person => <Person key={person.name} person={person} />
+    person => <Person key={person.id} person={person} />
   )
 }</ul>;
 

@@ -3,7 +3,7 @@ const TypeSelect = ({ value, onChange, personTypes}) => (
     <select value={value} onChange={onChange}>
       {
         personTypes.map(
-          ({ value, name }) => <option value={value}>{name}</option>
+          ({ value, name }) => <option key={value} value={value}>{name}</option>
         )
       }
     </select>

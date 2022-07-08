@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import InputName from './components/inputs/Name';
 import InputNumber from './components/inputs/Number';
 import TypeSelect from './components/inputs/TypeSelect';
@@ -7,13 +8,23 @@ import Numbers from './components/Numbers';
 import NewEntryForm from './components/NewEntryForm';
 
 const App = (props) => {
-  const [persons, setPersons] = useState(props.persons);
+  const [persons, setPersons] = useState([]);
+  const [foundPersons, setFoundPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [newType, setNewType] = useState('');
   const [filterInput, setFilterInput] = useState('');
-  const [foundPersons, setFoundPersons] = useState(persons);
   const personTypes = props.personTypes;
+
+  const hook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data);
+        setFoundPersons(response.data);
+      });
+  };
+  useEffect(hook, []);
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -24,7 +35,7 @@ const App = (props) => {
       return;
     }
 
-    const newPersonsList = persons.concat({ name: newName, number: newNumber, type: newType });
+    const newPersonsList = persons.concat({ id: persons.length + 1, name: newName, number: newNumber, type: newType });
     setPersons(newPersonsList);
     setFoundPersons(newPersonsList);
     setNewName('');
