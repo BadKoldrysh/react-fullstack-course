@@ -10,8 +10,8 @@ const App = (props) => {
 
   const hook = () => {
     noteService.getAll()
-      .then(response => {
-        setNotes(response.data);
+      .then(initialData => {
+        setNotes(initialData);
       });
   };
   useEffect(hook, []);
@@ -26,8 +26,8 @@ const App = (props) => {
     };
 
     noteService.create({ newNoteObject })
-      .then(response => {
-        setNotes(notes.concat(response.data));
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote));
         setNewNote('');
       });
   };
@@ -41,8 +41,8 @@ const App = (props) => {
     const changedNote = { ...note, important: !note.important};
 
     noteService.update({ id, changedNote })
-      .then(response => {
-        setNotes(notes.map(note => note.id !== id ? note : response.data));
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote));
       });
   };
 
