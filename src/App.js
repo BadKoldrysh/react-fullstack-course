@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import personsService from './services/persons';
 import axios from 'axios';
 import InputName from './components/inputs/Name';
 import InputNumber from './components/inputs/Number';
@@ -17,11 +18,10 @@ const App = (props) => {
   const personTypes = props.personTypes;
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
-        setFoundPersons(response.data);
+    personsService.getAll()
+      .then(initialData => {
+        setPersons(initialData);
+        setFoundPersons(initialData);
       });
   };
   useEffect(hook, []);
@@ -35,12 +35,17 @@ const App = (props) => {
       return;
     }
 
-    const newPersonsList = persons.concat({ id: persons.length + 1, name: newName, number: newNumber, type: newType });
-    setPersons(newPersonsList);
-    setFoundPersons(newPersonsList);
-    setNewName('');
-    setNewNumber('');
-    setFilterInput('');
+    const newPersonObject = { id: persons.length + 1, name: newName, number: newNumber, type: newType };
+
+    personsService.create({ newPersonObject })
+      .then(createdObject => {
+        const newPersonsList = persons.concat(createdObject);
+        setPersons(newPersonsList);
+        setFoundPersons(newPersonsList);
+        setNewName('');
+        setNewNumber('');
+        setFilterInput('');
+      });
   };
 
   const handleOnChangeName = (event) => {
