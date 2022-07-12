@@ -30,7 +30,21 @@ const App = (props) => {
 
     const existingPersons = persons.filter(person => person.name === newName);
     if (existingPersons.length !== 0) {
-      alert(newName + ' is already added to phonebook');
+      const personToUpdate = existingPersons[0];
+      console.log(existingPersons[0]);
+      if (window.confirm(personToUpdate.name + ' is already added to phonebook, replace the old number with a new one?')) {
+        personToUpdate.number = newNumber;
+        personsService.update({ id: personToUpdate.id, personToUpdate })
+          .then(updatedObject => {
+            persons.find(person => person.id === updatedObject.id).number = updatedObject.number;
+            setPersons(persons);
+            setFoundPersons(persons);
+            setNewName('');
+            setNewNumber('');
+            setFilterInput('');
+          });
+      }
+
       return;
     }
 
@@ -38,9 +52,9 @@ const App = (props) => {
 
     personsService.create({ newPersonObject })
       .then(createdObject => {
-        const newPersonsList = persons.concat(createdObject);
-        setPersons(newPersonsList);
-        setFoundPersons(newPersonsList);
+        const updatedPersonsList = persons.concat(createdObject);
+        setPersons(updatedPersonsList);
+        setFoundPersons(updatedPersonsList);
         setNewName('');
         setNewNumber('');
         setFilterInput('');
