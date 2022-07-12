@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import personsService from './services/persons';
-import axios from 'axios';
 import InputName from './components/inputs/Name';
 import InputNumber from './components/inputs/Number';
 import TypeSelect from './components/inputs/TypeSelect';
@@ -71,6 +70,18 @@ const App = (props) => {
     setFilterInput(event.target.value);
   };
 
+  const deletePerson = personToDelete => {
+    if (window.confirm('Delete ' + personToDelete.name + '?')) {
+      const id = personToDelete.id;
+
+      personsService.deletePerson({ id })
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== id));
+          setFoundPersons(foundPersons.filter(person => person.id !== id));
+        });
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -83,7 +94,7 @@ const App = (props) => {
         typeSelect={<TypeSelect value={newType} onChange={handleOnChangeType} personTypes={personTypes} />}
       />
       <h2>Numbers</h2>
-      <Numbers persons={foundPersons} />
+      <Numbers persons={foundPersons} deletePerson={deletePerson} />
     </div>
   );
 };
