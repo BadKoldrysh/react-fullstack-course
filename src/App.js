@@ -37,11 +37,8 @@ const App = (props) => {
         personsService.update({ id: personToUpdate.id, personToUpdate })
           .then(updatedObject => {
             persons.find(person => person.id === updatedObject.id).number = updatedObject.number;
-            setPersons(persons);
-            setFoundPersons(persons);
-            setNewName('');
-            setNewNumber('');
-            setFilterInput('');
+            updatePersonsList(persons);
+            refreshForm();
           });
       }
 
@@ -52,13 +49,20 @@ const App = (props) => {
 
     personsService.create({ newPersonObject })
       .then(createdObject => {
-        const updatedPersonsList = persons.concat(createdObject);
-        setPersons(updatedPersonsList);
-        setFoundPersons(updatedPersonsList);
-        setNewName('');
-        setNewNumber('');
-        setFilterInput('');
+        updatePersonsList(persons.concat(createdObject));
+        refreshForm();
       });
+  };
+
+  const updatePersonsList = (updatedList) => {
+    setPersons(updatedList);
+    setFoundPersons(updatedList);
+  };
+
+  const refreshForm = () => {
+    setNewName('');
+    setNewNumber('');
+    setFilterInput('');
   };
 
   const handleOnChangeName = (event) => {
