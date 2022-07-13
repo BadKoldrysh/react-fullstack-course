@@ -4,9 +4,9 @@ const Note = ({ note, toggleImportance }) => {
     : 'make important';
 
   return (
-    <li>
+    <li className='note'>
       {note.content}
-      <button style={{cursor:"pointer"}} onClick={toggleImportance}>{label}</button>
+      <button onClick={toggleImportance}>{label}</button>
     </li>
   );
 };
