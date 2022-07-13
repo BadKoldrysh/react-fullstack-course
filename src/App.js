@@ -6,6 +6,7 @@ import TypeSelect from './components/inputs/TypeSelect';
 import Filter from './components/Filter';
 import Numbers from './components/Numbers';
 import NewEntryForm from './components/NewEntryForm';
+import Notification from './components/Notification';
 
 const App = (props) => {
   const [persons, setPersons] = useState([]);
@@ -14,6 +15,7 @@ const App = (props) => {
   const [newNumber, setNewNumber] = useState('');
   const [newType, setNewType] = useState('');
   const [filterInput, setFilterInput] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState(null);
   const personTypes = props.personTypes;
 
   const hook = () => {
@@ -31,7 +33,6 @@ const App = (props) => {
     const existingPersons = persons.filter(person => person.name === newName);
     if (existingPersons.length !== 0) {
       const personToUpdate = existingPersons[0];
-      console.log(existingPersons[0]);
       if (window.confirm(personToUpdate.name + ' is already added to phonebook, replace the old number with a new one?')) {
         personToUpdate.number = newNumber;
         personsService.update({ id: personToUpdate.id, personToUpdate })
@@ -39,6 +40,7 @@ const App = (props) => {
             persons.find(person => person.id === updatedObject.id).number = updatedObject.number;
             updatePersonsList(persons);
             refreshForm();
+            notify('Updated ' + updatedObject.name);
           });
       }
 
@@ -51,8 +53,16 @@ const App = (props) => {
       .then(createdObject => {
         updatePersonsList(persons.concat(createdObject));
         refreshForm();
+        notify('Added ' + createdObject.name)
       });
   };
+
+  const notify = (message, hideAfterMs = 3000) => {
+    setNotificationMessage(message);
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, hideAfterMs);
+  }
 
   const updatePersonsList = (updatedList) => {
     setPersons(updatedList);
@@ -62,6 +72,7 @@ const App = (props) => {
   const refreshForm = () => {
     setNewName('');
     setNewNumber('');
+    setNewType('unknown');
     setFilterInput('');
   };
 
@@ -96,6 +107,7 @@ const App = (props) => {
         .then(response => {
           setPersons(persons.filter(person => person.id !== id));
           setFoundPersons(foundPersons.filter(person => person.id !== id));
+          notify('Deleted ' + personToDelete.name);
         });
     }
   };
@@ -103,6 +115,7 @@ const App = (props) => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter value={filterInput} onChange={handleOnChangeFilter} />
       <h2>add a new person</h2>
       <NewEntryForm
