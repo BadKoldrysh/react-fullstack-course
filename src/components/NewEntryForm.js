@@ -5,7 +5,7 @@ const NewEntryForm = ({ onSubmit, nameInput, numberInput, typeSelect }) => {
       {numberInput}
       {typeSelect}
       <div>
-        <button style={{cursor:'pointer'}} type="submit">add</button>
+        <button type="submit">add</button>
       </div>
     </form>
   );
