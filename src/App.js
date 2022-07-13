@@ -15,7 +15,7 @@ const App = (props) => {
   const [newNumber, setNewNumber] = useState('');
   const [newType, setNewType] = useState('');
   const [filterInput, setFilterInput] = useState('');
-  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notification, setNotification] = useState({ text: null });
   const personTypes = props.personTypes;
 
   const hook = () => {
@@ -41,6 +41,10 @@ const App = (props) => {
             updatePersonsList(persons);
             refreshForm();
             notify('Updated ' + updatedObject.name);
+          }).catch(error => {
+            notify('Information of ' + personToUpdate.name + ' has already been removed from server', true, 5000)
+            updatePersonsList(persons.filter(person => person.id !== personToUpdate.id));
+            refreshForm();
           });
       }
 
@@ -57,10 +61,10 @@ const App = (props) => {
       });
   };
 
-  const notify = (message, hideAfterMs = 3000) => {
-    setNotificationMessage(message);
+  const notify = (message, isError = false, hideAfterMs = 3000) => {
+    setNotification({ text: message, isError: isError });
     setTimeout(() => {
-      setNotificationMessage(null);
+      setNotification({ text: null });
     }, hideAfterMs);
   }
 
@@ -115,7 +119,7 @@ const App = (props) => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notification.text} isError={notification.isError} />
       <Filter value={filterInput} onChange={handleOnChangeFilter} />
       <h2>add a new person</h2>
       <NewEntryForm
